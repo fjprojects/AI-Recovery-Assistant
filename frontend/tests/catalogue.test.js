@@ -19,7 +19,7 @@ test("filters by category case-insensitively", () => {
 
 test("searches names, descriptions and professional notes", () => {
   assert.deepEqual(filterExerciseReferences(catalogue, { query: "SHOULDER" }).map((x) => x.id), ["shoulder"]);
-  assert.deepEqual(filterExerciseReferences(catalogue, { query: "qualified" }).map((x) => x.id), ["shoulder", "ankle"]);
+  assert.deepEqual(filterExerciseReferences(catalogue, { query: "guidance" }).map((x) => x.id), ["shoulder"]);\n  assert.deepEqual(filterExerciseReferences(catalogue, { query: "qualified" }).map((x) => x.id), ["ankle"]);
   assert.deepEqual(filterExerciseReferences(catalogue, { query: "discussion" }).map((x) => x.id), ["seated"]);
 });
 

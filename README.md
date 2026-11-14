@@ -15,7 +15,7 @@ The React frontend and Django API are deployed as separate, Git-connected Vercel
 ## Product capabilities
 
 - Search and filter a structured movement-reference library, including professional guidance notes.
-- Retrieve distinct catalogue categories for building filter controls.
+- Retrieve distinct catalogue categories and individual reference details.
 - Sort entries by name or category.
 - Receive paginated, validated JSON responses and structured query errors.
 - Database-aware health checks in local/database mode; static demo mode explicitly reports that a database is not required.
@@ -77,6 +77,7 @@ All endpoints are read-only and accept GET requests.
 | GET | `/api/exercises/?q=ankle` | Search name, category, description and professional note |
 | GET | `/api/exercises/?sort=name&order=asc` | Sort by name or category |
 | GET | `/api/exercises/categories/` | Return distinct category names |
+| GET | `/api/exercises/ankle-mobility/` | Retrieve a single catalogue entry by identifier |
 
 ### Pagination and validation
 
@@ -85,7 +86,7 @@ All endpoints are read-only and accept GET requests.
 - `count` is the total number of matched entries; `items` contains the requested page.
 - The `pagination` object reports page, page size, total items/pages and next/previous flags.
 - `sort` accepts `default`, `name` or `category`; `order` accepts `asc` or `desc`.
-- Invalid and oversized parameters return HTTP 400 with a structured `error` object.
+- Invalid parameters return HTTP 400; an unknown entry identifier returns HTTP 404 with a structured `error` object.
 
 Responses contain catalogue information and the project disclaimer only. This starter does not collect a patient profile, camera upload or personal rehabilitation session.
 

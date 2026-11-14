@@ -28,7 +28,19 @@ class ExerciseApiTests(TestCase):
         self.assertEqual(response.status_code, 200)
         self.assertEqual(response.json()["status"], "ok")
         self.assertEqual(response.json()["database"], "connected")
-        self.assertEqual(response.json()["services"], ["exercise-library", "exercise-categories"])
+        self.assertIn("exercise-details", response.json()["services"])
+
+    def test_exercise_detail_returns_one_reference(self):
+        response = self.client.get("/api/exercises/shoulder-raise/")
+        self.assertEqual(response.status_code, 200)
+        self.assertEqual(response.json()["item"]["id"], "shoulder-raise")
+        self.assertIn("professional_note", response.json()["item"])
+        self.assertIn("not exercise prescriptions", response.json()["disclaimer"])
+
+    def test_exercise_detail_returns_structured_404(self):
+        response = self.client.get("/api/exercises/not-a-real-entry/")
+        self.assertEqual(response.status_code, 404)
+        self.assertEqual(response.json()["error"]["code"], "not_found")
 
     def test_exercise_catalogue(self):
         response = self.client.get("/api/exercises/")
@@ -102,3 +114,9 @@ class ExerciseStaticDemoModeTests(TestCase):
         self.assertEqual(categories.json()["count"], 3)
         self.assertEqual(health.status_code, 200)
         self.assertEqual(health.json()["database"], "not-required")
+
+    @override_settings(DEMO_DATA_MODE=True)
+    def test_detail_endpoint_uses_same_read_only_demo_catalogue(self):
+        response = self.client.get("/api/exercises/ankle-mobility/")
+        self.assertEqual(response.status_code, 200)
+        self.assertEqual(response.json()["item"]["category"], "Gentle ankle movement")

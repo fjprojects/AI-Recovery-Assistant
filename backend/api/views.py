@@ -85,7 +85,7 @@ def health(request):
         "framework": "Django",
         "django_version": get_version(),
         "database": database,
-        "services": ["exercise-library", "exercise-categories"],
+        "services": ["exercise-library", "exercise-categories", "exercise-details"],
         "data_mode": "static-demo" if settings.DEMO_DATA_MODE else "database",
     })
 
@@ -100,6 +100,28 @@ def exercise_categories(request):
         "project": PROJECT,
         "count": len(categories),
         "categories": categories,
+        "source": "illustrative reference catalogue",
+        "disclaimer": DISCLAIMER,
+    })
+
+
+@require_GET
+def exercise_detail(request, exercise_id):
+    item = next(
+        (record for record in _catalogue_items() if record["id"] == exercise_id),
+        None,
+    )
+    if item is None:
+        return error_response(
+            "No movement reference exists with the requested identifier.",
+            parameter="exercise_id",
+            code="not_found",
+            status=404,
+        )
+
+    return JsonResponse({
+        "project": PROJECT,
+        "item": item,
         "source": "illustrative reference catalogue",
         "disclaimer": DISCLAIMER,
     })

@@ -1,5 +1,6 @@
 import { useEffect, useMemo, useState } from "react";
 import { getJson } from "./lib/api.js";
+import { filterExerciseReferences, toggleSavedReference } from "./lib/catalogue.js";
 
 const iconFor = (category = "") => {
   const value = category.toLowerCase();
@@ -41,20 +42,15 @@ export default function App() {
     () => ["All", ...new Set(exercises.map((item) => item.category).filter(Boolean))],
     [exercises],
   );
-  const visibleExercises = useMemo(() => {
-    const text = query.toLowerCase().trim();
-    return exercises.filter((item) => {
-      const haystack = [item.name, item.category, item.description].join(" ").toLowerCase();
-      return (category === "All" || item.category === category) && haystack.includes(text);
-    });
-  }, [exercises, category, query]);
+  const visibleExercises = useMemo(
+    () => filterExerciseReferences(exercises, { category, query }),
+    [exercises, category, query],
+  );
   const selected = visibleExercises.find((item) => item.id === selectedId) ?? visibleExercises[0] ?? null;
   const saved = selected ? reviewList.includes(selected.id) : false;
 
   function toggleReview(id) {
-    setReviewList((current) => current.includes(id)
-      ? current.filter((item) => item !== id)
-      : [...current, id]);
+    setReviewList((current) => toggleSavedReference(current, id));
   }
 
   return (

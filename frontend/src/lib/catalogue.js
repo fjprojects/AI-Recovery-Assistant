@@ -57,3 +57,21 @@ export function writeSavedReferences(storage, ids) {
     return false;
   }
 }
+
+
+function csvCell(value) {
+  return "\"" + String(value ?? "").replace(/\"/g, "\"\"") + "\"";
+}
+
+export function buildDiscussionCsv(exercises = [], savedIds = []) {
+  const byId = new Map(exercises.map((item) => [item.id, item]));
+  const headers = ["id", "name", "category", "description", "professional_note"];
+  const rows = savedIds.map((id) => byId.get(id)).filter(Boolean).map((item) => [
+    item.id,
+    item.name,
+    item.category,
+    item.description,
+    item.professional_note,
+  ]);
+  return [headers, ...rows].map((row) => row.map(csvCell).join(",")).join("\r\n");
+}

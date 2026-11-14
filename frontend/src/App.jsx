@@ -5,6 +5,7 @@ import {
   readSavedReferences,
   toggleSavedReference,
   writeSavedReferences,
+  buildDiscussionCsv,
 } from "./lib/catalogue.js";
 
 const iconFor = (category = "") => {
@@ -109,6 +110,18 @@ export default function App() {
     setReviewList((current) => toggleSavedReference(current, id));
   }
 
+  function exportDiscussionList() {
+    if (!reviewList.length) return;
+    const csv = buildDiscussionCsv(exercises, reviewList);
+    const blob = new Blob([csv], { type: "text/csv;charset=utf-8" });
+    const url = URL.createObjectURL(blob);
+    const link = document.createElement("a");
+    link.href = url;
+    link.download = "reform-discussion-references.csv";
+    link.click();
+    URL.revokeObjectURL(url);
+  }
+
   function clearFilters() {
     setQuery("");
     setCategory("All");
@@ -155,6 +168,7 @@ export default function App() {
         <div className="library-controls">
           <label className="library-sort"><span>SORT</span><select value={sort} onChange={(event) => setSort(event.target.value)}><option value="default">Recommended order</option><option value="name">Name A–Z</option><option value="category">Category</option></select></label>
           <button type="button" className={savedOnly ? "saved-filter active" : "saved-filter"} onClick={() => setSavedOnly((value) => !value)} aria-pressed={savedOnly}>☆ Saved only ({reviewList.length})</button>
+          <button type="button" className="text-button export-discussion" onClick={exportDiscussionList} disabled={!reviewList.length}>Export discussion sheet ↗</button>
           <button type="button" className="text-button" onClick={clearFilters}>Reset filters</button>
         </div>
 

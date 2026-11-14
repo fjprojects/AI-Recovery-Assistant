@@ -2,6 +2,7 @@ import test from "node:test";
 import assert from "node:assert/strict";
 import {
   filterExerciseReferences,
+  buildDiscussionCsv,
   readSavedReferences,
   toggleSavedReference,
   writeSavedReferences,
@@ -56,4 +57,17 @@ test("saved reference IDs round-trip through session storage", () => {
 test("corrupt saved-reference storage safely falls back to an empty list", () => {
   const storage = { getItem: () => "{broken" };
   assert.deepEqual(readSavedReferences(storage), []);
+});
+
+
+test("exports saved references as escaped CSV in saved order", () => {
+  const csv = buildDiscussionCsv([
+    { id: "a", name: "Raise, gently", category: "Upper-body", description: "A \"sample\" note", professional_note: "Ask a professional." },
+    { id: "b", name: "Ankle mobility", category: "Lower-body", description: "Short reference", professional_note: "Discuss first." },
+  ], ["b", "a", "missing"]);
+  const lines = csv.split("\r\n");
+  assert.equal(lines.length, 3);
+  assert.equal(lines[1], "\"b\",\"Ankle mobility\",\"Lower-body\",\"Short reference\",\"Discuss first.\"");
+  assert.ok(lines[2].includes("\"Raise, gently\""));
+  assert.ok(lines[2].includes("\"A \"\"sample\"\" note\""));
 });

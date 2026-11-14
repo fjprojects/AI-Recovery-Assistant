@@ -21,6 +21,7 @@ The React frontend and Django API are deployed as separate, Git-connected Vercel
 - Database-aware health checks in local/database mode; static demo mode explicitly reports that a database is not required.
 - Review descriptions and professional-guidance notes for each entry.
 - Save selected references to a temporary, browser-session discussion list.
+- Export saved catalogue references to a CSV discussion sheet; the export contains catalogue content only, not personal or health information.
 - Original interactive concept preserved at `frontend/public/prototype.html`.
 
 ## Technology

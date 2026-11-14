@@ -1,25 +1,39 @@
 # AI Recovery Assistant
 
-An early prototype exploring a guided movement and rehabilitation-support interface.
+A **React + Django** starter for a movement-session and rehabilitation-support interface concept.
 
-## Current prototype
+## Stack
+- React 19.3 + Vite 8 frontend
+- Django 6.1 JSON API
+- Vite proxies local `/api` calls to Django on port 8000
 
-- Select from a small library of example movements.
-- Preview an illustrative movement visual and sample angle value.
-- Start a simulated session and increment demonstration repetitions.
-- View a simple session timer and sample feedback cues.
-
-## Important scope note
-
-This repository currently contains a **UI prototype only**. It does not connect to a camera, analyse real body movement, provide rehabilitation prescriptions, diagnose conditions, or replace a qualified healthcare professional. All session values and feedback are illustrative.
+## Structure
+- `frontend/` — React application and preserved earlier prototype at `public/prototype.html`
+- `backend/` — Django project and JSON endpoints
 
 ## Run locally
 
-No build tools or dependencies are required. Open `index.html` in a modern browser, or serve this folder with any static web server.
+### Terminal 1 — Django API
+```bash
+cd backend
+python -m venv .venv
+# Windows PowerShell: .venv\\Scripts\\Activate.ps1
+# macOS/Linux: source .venv/bin/activate
+python -m pip install -r requirements.txt
+python manage.py runserver 8000
+```
 
-## Roadmap
+### Terminal 2 — React frontend
+```bash
+cd frontend
+npm install
+npm run dev
+```
 
-- Explore an optional camera-based movement interface with explicit consent.
-- Evaluate movement-estimation accuracy before presenting any real measurements.
-- Design privacy-conscious handling of video and session data.
-- Keep care plans and exercise recommendations under qualified professional guidance.
+Open the Vite URL printed in the terminal (normally `http://localhost:5173`). The React page fetches `GET /api/health/` and `GET /api/exercises/`.
+
+## Production configuration
+Set `VITE_API_BASE_URL` in `frontend/.env.local` to the deployed Django backend URL before building. On the backend configure `DJANGO_SECRET_KEY`, `DJANGO_DEBUG=false`, `DJANGO_ALLOWED_HOSTS`, and `CORS_ALLOWED_ORIGINS`.
+
+## Prototype scope
+The listed movements are illustrative UI examples, not an exercise prescription. This project does not analyse camera footage, diagnose conditions, or replace guidance from a qualified healthcare professional. The first HTML demo is preserved separately; its UI has not yet been rewritten as React components.

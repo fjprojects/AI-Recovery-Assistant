@@ -53,3 +53,22 @@ class ExerciseApiTests(TestCase):
     def test_write_methods_are_not_allowed(self):
         response = self.client.post("/api/exercises/", data={})
         self.assertEqual(response.status_code, 405)
+
+
+from django.test import override_settings
+
+
+class ExerciseStaticDemoModeTests(TestCase):
+    @override_settings(DEMO_DATA_MODE=True)
+    def test_catalogue_is_available_without_database_seed(self):
+        response = self.client.get("/api/exercises/")
+        self.assertEqual(response.status_code, 200)
+        self.assertEqual(response.json()["count"], 3)
+        self.assertEqual(response.json()["source"], "illustrative reference catalogue")
+
+    @override_settings(DEMO_DATA_MODE=True)
+    def test_static_catalogue_supports_search_and_category_filters(self):
+        by_category = self.client.get("/api/exercises/?category=gentle%20ankle%20movement")
+        self.assertEqual([x["id"] for x in by_category.json()["items"]], ["ankle-mobility"])
+        by_query = self.client.get("/api/exercises/?q=shoulder")
+        self.assertEqual([x["id"] for x in by_query.json()["items"]], ["shoulder-raise"])

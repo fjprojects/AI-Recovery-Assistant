@@ -13,7 +13,7 @@ test("filters by category", () => {
 });
 
 test("searches names and descriptions case-insensitively", () => {
-  assert.deepEqual(filterExerciseReferences(catalogue, { query: "EXAMPLE" }).map((x) => x.id), ["shoulder"]);
+  assert.deepEqual(filterExerciseReferences(catalogue, { query: "SHOULDER" }).map((x) => x.id), ["shoulder"]);
 });
 
 test("All category preserves every matching entry", () => {

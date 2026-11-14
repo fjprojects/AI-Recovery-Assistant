@@ -15,6 +15,14 @@ const iconFor = (category = "") => {
   return "✳";
 };
 
+function getSessionStore() {
+  try {
+    return typeof window === "undefined" ? null : window.sessionStorage;
+  } catch {
+    return null;
+  }
+}
+
 export default function App() {
   const [exercises, setExercises] = useState([]);
   const [categories, setCategories] = useState(["All"]);
@@ -27,9 +35,7 @@ export default function App() {
   const [selectedId, setSelectedId] = useState("");
   const [selectedDetail, setSelectedDetail] = useState(null);
   const [detailStatus, setDetailStatus] = useState("idle");
-  const [reviewList, setReviewList] = useState(() => (
-    typeof window === "undefined" ? [] : readSavedReferences(window.sessionStorage)
-  ));
+  const [reviewList, setReviewList] = useState(() => readSavedReferences(getSessionStore()));
 
   async function loadLibrary() {
     setStatus("loading");
@@ -56,7 +62,7 @@ export default function App() {
 
   useEffect(() => { loadLibrary(); }, []);
   useEffect(() => {
-    if (typeof window !== "undefined") writeSavedReferences(window.sessionStorage, reviewList);
+    writeSavedReferences(getSessionStore(), reviewList);
   }, [reviewList]);
 
   const visibleExercises = useMemo(

@@ -42,3 +42,14 @@ class ExerciseApiTests(TestCase):
         response = self.client.get("/api/exercises/?q=shoulder")
         self.assertEqual(response.status_code, 200)
         self.assertEqual([item["id"] for item in response.json()["items"]], ["shoulder-raise"])
+
+
+    def test_health_identifies_this_project_service(self):
+        response = self.client.get("/api/health/")
+        self.assertEqual(response.status_code, 200)
+        self.assertEqual(response.json()["project"], "AI Recovery Assistant")
+        self.assertEqual(response.json()["services"], ["exercise-library"])
+
+    def test_write_methods_are_not_allowed(self):
+        response = self.client.post("/api/exercises/", data={})
+        self.assertEqual(response.status_code, 405)

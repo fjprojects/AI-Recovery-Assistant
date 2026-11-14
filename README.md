@@ -12,11 +12,11 @@
 - Django-backed catalogue records, seed command and filtered JSON endpoints.
 - Original interactive concept preserved at frontend/public/prototype.html.
 
-## Technology
+## Runtime requirements\n- Node.js 22.12 or newer\n- Python 3.12 or newer (Python 3.13 is used in CI)\n\n## Technology
 | Layer | Stack |
 |---|---|
-| Frontend | React 19.3, Vite 8.3, JavaScript |
-| Backend | Django 6.1, Python |
+| Frontend | React 19.3.1, Vite 8.3.8, JavaScript |
+| Backend | Django 6.1.3, Python |
 | Data | Django ORM, SQLite locally, PostgreSQL via DATABASE_URL |
 | API | Read-only JSON endpoints |
 
